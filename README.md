@@ -1,3 +1,11 @@
+To Fix Not Starting on Windows
+Start in root folder
+cd android
+./gradlew clean
+./gradlew --stop
+Then, go back to the root directory of your project and run:
+npx react-native run-android
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
