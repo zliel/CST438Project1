@@ -11,7 +11,7 @@ const LandingPage = ({navigation}) => {
                 LiveBeat
             </Text>
             
-            <Text style={styles.description}>
+            <Text style={styles.text}>
                 Your app for discovering live music events!
             </Text>
 
