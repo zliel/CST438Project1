@@ -47,6 +47,13 @@ const styles = StyleSheet.create({
         letterSpacing: 0.25,
         color: 'white',
       },
+      title {
+      fontSize: 18,
+      lineHeight: 21,
+      fontWeight: 'bold',
+      letterSpacing: 0.25,
+      color: 'white',
+      },
   });
 
 export default LandingPage;
