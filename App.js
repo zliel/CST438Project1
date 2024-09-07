@@ -24,6 +24,9 @@ const App = () => {
                 {/*To add a screen, make your component in the "/Screens directory, import it here
                 and add a new Stack.Screen"*/}
                 <Stack.Screen name="Landing Page" component={LandingPage}/>
+                {/* <Stack.Screen name="Login" component={Login}/>
+                <Stack.Screen name ="Signup" component={Signup}/> */}
+
 
             </Stack.Navigator>
         </NavigationContainer>
