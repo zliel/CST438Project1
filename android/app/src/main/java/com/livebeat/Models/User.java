@@ -24,4 +24,36 @@ public class User implements Serializable {
         this.password = password;
         this.likedEvents = likedEvents;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public ArrayList<String> getLikedEvents() {
+        return likedEvents;
+    }
+
+    public void setLikedEvents(ArrayList<String> likedEvents) {
+        this.likedEvents = likedEvents;
+    }
 }
