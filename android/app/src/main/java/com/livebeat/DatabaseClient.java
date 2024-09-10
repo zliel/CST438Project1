@@ -5,6 +5,8 @@ import androidx.room.Room;
 
 import com.livebeat.Models.User;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.util.ArrayList;
 
 public class DatabaseClient {
@@ -37,22 +39,23 @@ public class DatabaseClient {
             return;
         }
 
+        String salt = BCrypt.gensalt();
         ArrayList<String> likedEvents = new ArrayList<String>();
         likedEvents.add("event1");
         likedEvents.add("event2");
 
-        User user1 = new User("admin", "admin", likedEvents);
+        User user1 = new User("admin", BCrypt.hashpw("admin", salt), likedEvents);
 
         likedEvents.clear();
         likedEvents.add("event3");
         likedEvents.add("event4");
-        User user2 = new User("user1", "password2", likedEvents);
+        User user2 = new User("user1", BCrypt.hashpw("password1", salt), likedEvents);
 
         likedEvents.clear();
         likedEvents.add("event1");
         likedEvents.add("event5");
         likedEvents.add("event6");
-        User user3 = new User("user2", "password3", likedEvents);
+        User user3 = new User("user2", BCrypt.hashpw("password2", salt), likedEvents);
         appDatabase.userDao().insertAll(user1, user2, user3);
     }
 }
