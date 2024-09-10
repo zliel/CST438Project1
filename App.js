@@ -7,7 +7,7 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
-import Home from "./Screens/Home";
+import LandingPage from "./Screens/LandingPage";
 import Login from './Screens/Login';
 
 const Stack = createStackNavigator();
@@ -22,10 +22,14 @@ const App = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                {/* <Stack.Screen name="Home" component={Home} /> */}
+
                 {/*To add a screen, make your component in the "/Screens directory, import it here
                 and add a new Stack.Screen"*/}
-                <Stack.Screen name='Login' component={Login} options={{title: ""}}/>
+                <Stack.Screen name="Landing Page" component={LandingPage}/>
+                  <Stack.Screen name="Login" component={Login} options={{title: ""}}/>
+                {/* <Stack.Screen name="Login" component={Login}/>
+                <Stack.Screen name ="Signup" component={Signup}/> */}
+
             </Stack.Navigator>
         </NavigationContainer>
     );
