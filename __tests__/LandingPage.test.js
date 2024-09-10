@@ -19,16 +19,27 @@ describe ('LandingPage', () => {
 
     it('has a Log in button', () => {
         render(<LandingPage />);
-        expect(screen.getByText('Log in')).toBeTruthy();
+        expect(screen.getByText('Login')).toBeTruthy();
     });
 
-    it('navigates to landing page on click',() =>{
+    it('navigates to login page on click',() =>{
         const navigate = jest.fn();
         const { getByText } = render(<LandingPage navigation={{ navigate }} />);
-        fireEvent.press(screen.getByText('Log in'));
-        expect(screen.getByText('Log In')).toBeOnTheScreen();
+        fireEvent.press(screen.getByText('Login'));
+        expect(screen.getByText('Login')).toBeTruthy();
 
     });
+
+    it('navigate to signup page on click',() =>{
+        const navigate = jest.fn();
+        const { getByText } = render(<LandingPage navigation={{ navigate }} />);
+        fireEvent.press(screen.getByText('Sing up'));
+        expect(screen.getByText('Sign up')).toBeTruthy();
+
+
+    });
+
+
 
 
 

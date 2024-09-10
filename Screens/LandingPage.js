@@ -16,11 +16,11 @@ const LandingPage = ({navigation}) => {
             </Text>
 
             <Button style={styles.button}
-                title ="Log in" onPress={() =>navigation.navigate("Log in Page") }
+                title ="Login" onPress={() =>navigation.navigate("Login") }
             />
 
             <Button style={styles.button}
-                title ="Sign up" onPress={() =>navigation.navigate("Sign up Page") }
+                title ="Signup" onPress={() =>navigation.navigate("Signup") }
             />
                 
         </View>
