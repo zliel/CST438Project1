@@ -9,7 +9,7 @@ import { render, screen } from '@testing-library/react-native';
 
 // Note: import explicitly to use the types shipped with jest.
 import {it, describe, expect} from '@jest/globals';
-
+//opopo
 describe('App', () => {
   it('renders without errors', () => {
     render(<App />);
