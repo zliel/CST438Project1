@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {SafeAreaView, StyleSheet, TextInput, Button, View, Alert, Text, TouchableOpacity, ImageBackground } from 'react-native';
 import { NativeModules } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { DatabaseModule } = NativeModules
 
@@ -9,9 +10,25 @@ const Login = ({navigation}) => {
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
-    // Perform login
-    navigation.navigate("Landing Page")
-  }
+    // Can't read "then" prop of undefined
+    let response;
+
+    try {
+        response = await DatabaseModule.login(username, password);
+        response = JSON.parse(response);
+        console.log(response);
+    } catch (error) {
+        console.error(error)
+    }
+
+
+    if (response !== null) {
+        await AsyncStorage.setItem("user", JSON.stringify(response));
+    } else {
+        console.error("Invalid username or password");
+    }
+
+}
   return (
     
     <SafeAreaView style={styles.container}>
@@ -33,7 +50,7 @@ const Login = ({navigation}) => {
         <Button
           title='Login'
           color={"#3346ff"}
-          onPress={() => Alert.alert('Login Button pressed')}
+          onPress={handleLogin}
         />
 
         {/* Don't have an account */}
