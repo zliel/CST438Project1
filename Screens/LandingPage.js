@@ -1,9 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Button } from 'react-native';
 
-
 const LandingPage = ({navigation}) => {
-
     return (
         <View style= {styles.container}>
         
@@ -22,7 +20,10 @@ const LandingPage = ({navigation}) => {
             <Button style={styles.button}
                 title ="Signup" onPress={() =>navigation.navigate("Signup") }
             />
-                
+
+            <Button style={styles.button}
+                title ="Artist Search" onPress={() =>navigation.navigate("Artist Search") }
+            />
         </View>
     )
 }

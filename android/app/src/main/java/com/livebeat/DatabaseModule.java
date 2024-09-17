@@ -79,4 +79,20 @@ public class DatabaseModule extends ReactContextBaseJavaModule {
         }
         return null;
     }
+
+    @ReactMethod
+    public void updateUser(int id, String username, String password, ArrayList<String> likedEvents, Promise promise) {
+        AppDatabase db = DatabaseClient.getInstance(getReactApplicationContext()).getAppDatabase();
+        User user = db.userDao().findById(id);
+        if (user != null) {
+            user.setUsername(username);
+            user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+            user.setLikedEvents(likedEvents);
+            db.userDao().update(user);
+            user.setPassword(null);
+            promise.resolve(gson.toJson(user));
+        } else {
+            promise.reject("Error", "User not found");
+        }
+    }
 }

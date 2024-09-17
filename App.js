@@ -9,6 +9,7 @@ import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
 import LandingPage from "./Screens/LandingPage";
 import Login from './Screens/Login';
+import ArtistSearch from "./Screens/ArtistSearch";
 
 const Stack = createStackNavigator();
 
@@ -29,7 +30,7 @@ const App = () => {
                   <Stack.Screen name="Login" component={Login} options={{title: ""}}/>
                 {/* <Stack.Screen name="Login" component={Login}/>
                 <Stack.Screen name ="Signup" component={Signup}/> */}
-
+                <Stack.Screen name="Artist Search" component={ArtistSearch}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
