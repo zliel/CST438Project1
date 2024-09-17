@@ -33,8 +33,8 @@ describe ('LandingPage', () => {
     it('navigate to signup page on click',() =>{
         const navigate = jest.fn();
         const { getByText } = render(<LandingPage navigation={{ navigate }} />);
-        fireEvent.press(screen.getByText('Sing up'));
-        expect(screen.getByText('Sign up')).toBeTruthy();
+        fireEvent.press(screen.getByText('Signup'));
+        expect(screen.getByText('Signup')).toBeTruthy();
 
 
     });
