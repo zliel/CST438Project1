@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Button, FlatList, Image, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Alert, Button, FlatList, Image, StyleSheet, Text, TextInput, View} from 'react-native';
 
 
 const ArtistSearch = ({navigation}) => {
@@ -7,20 +7,32 @@ const ArtistSearch = ({navigation}) => {
     const [searchResults, setSearchResults] = useState([])
 
     const handleSearch = async () => {
-        // Use our API key to search for artists from the ticketmaster API
-        const API_KEY = process.env.API_KEY
-        const response = await fetch(`https://app.ticketmaster.com/discovery/v2/attractions.json?apikey=${API_KEY}&keyword=${attractionName}&typeId=KZAyXgnZfZ7v7nI&locale=*`);
-        const data = await response.json();
+        try {
+            // Use our API key to search for artists from the ticketmaster API
+            const API_KEY = process.env.API_KEY
+            const response = await fetch(`https://app.ticketmaster.com/discovery/v2/attractions.json?apikey=${API_KEY}&keyword=${attractionName}&typeId=KZAyXgnZfZ7v7nI&locale=*`);
+            if (!response.ok) {
+                throw new Error("An error occurred while searching for artists");
+            }
 
-        // Set the search results to the data we got back
-        setSearchResults(data._embedded.attractions.map(attraction => (
-            {
-                key: attraction.id,
-                name: attraction.name,
-                id: attraction.id,
-                url: attraction.url,
-                image_url: attraction.images[0].url
-            })));
+            const data = await response.json();
+            if (!data._embedded) {
+                throw new Error("No artists found");
+            }
+
+
+            // Set the search results to the data we got back
+            setSearchResults(data._embedded.attractions.map(attraction => (
+                {
+                    key: attraction.id,
+                    name: attraction.name,
+                    id: attraction.id,
+                    url: attraction.url,
+                    image_url: attraction.images[0].url
+                })));
+        } catch (e) {
+            Alert.alert("Error", e.message);
+        }
     }
 
 
@@ -35,7 +47,7 @@ const ArtistSearch = ({navigation}) => {
                     placeholder="Search for an artist!"
                     onChangeText={newAttractionName => setAttractionName(newAttractionName)}
                     defaultValue={attractionName}
-                    testID={"searchbar"}
+                    testID={"searchBar"}
                 />
                 <Button style={styles.searchButton}
                         title={"Search"}
@@ -45,7 +57,7 @@ const ArtistSearch = ({navigation}) => {
             </View>
 
             <FlatList data={searchResults} renderItem={({item}) => (
-                <View style={styles.listItem}>
+                <View style={styles.listItem} testID={"listItem"}>
                     <Image source={{uri: item.image_url}} style={styles.listItemImage}/>
                     <Text style={styles.listItemText}>{item.name}</Text>
                     <Button style={styles.listItemButton}
