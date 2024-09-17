@@ -22,7 +22,10 @@ const LandingPage = ({navigation}) => {
             <Button style={styles.button}
                 title ="Signup" onPress={() =>navigation.navigate("Signup") }
             />
-                
+
+            <Button style={styles.button}
+                title ="Artist Search" onPress={() =>navigation.navigate("Artist Search") }
+            />
         </View>
     )
 }
