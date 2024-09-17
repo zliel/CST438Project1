@@ -55,11 +55,10 @@ describe('Artist Search', () => {
         const mockData = {}
 
         // Mock the fetch function to return the mock data
-        const mockedFetch = jest.fn(() => Promise.resolve({
+        global.fetch = jest.fn(() => Promise.resolve({
             ok: true,
             json: () => mockData
         }));
-        global.fetch = mockedFetch;
 
         const spyForAlert = jest.spyOn(Alert, 'alert');
 
@@ -91,12 +90,10 @@ describe('Artist Search', () => {
         }
 
         // Mock the fetch function to return the mock data
-        const mockedFetch = jest.fn(() => Promise.resolve({
+        global.fetch = jest.fn(() => Promise.resolve({
             ok: true,
             json: () => mockData
         }));
-
-        global.fetch = mockedFetch;
 
         render(<ArtistSearch/>);
 
@@ -132,11 +129,10 @@ describe('Artist Search', () => {
         }
 
         // Mock the fetch function to return the mock data
-        const mockedFetch = jest.fn(() => Promise.resolve({
-                ok: true,
-                json: () => mockData
-            }));
-        global.fetch = mockedFetch;
+        global.fetch = jest.fn(() => Promise.resolve({
+            ok: true,
+            json: () => mockData
+        }));
 
         render(<ArtistSearch/>);
 
