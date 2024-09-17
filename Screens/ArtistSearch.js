@@ -1,7 +1,6 @@
 import React, {useState} from "react";
-import {Button, FlatList, Image, NativeModules, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Button, FlatList, Image, StyleSheet, Text, TextInput, View} from 'react-native';
 
-const {DatabaseModule} = NativeModules;
 
 const ArtistSearch = ({navigation}) => {
     const [attractionName, setAttractionName] = useState('');
