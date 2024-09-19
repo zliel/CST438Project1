@@ -1,16 +1,17 @@
-import React, {useState, useEffect} from "react";
-import {View, Text, StyleSheet, Button, Alert, Image, ActivityIndicator} from 'react-native';
-import { useRoute } from "@react-navigation/native";
-import { NativeModules } from 'react-native';
+import React, {useEffect, useState} from "react";
+import {ActivityIndicator, Alert, Button, FlatList, Image, NativeModules, StyleSheet, Text, View} from 'react-native';
+import {useRoute} from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const { DatabaseModule } = NativeModules;
+const {DatabaseModule} = NativeModules;
 const ArtistEvents = ({navigation}) => {
     const route = useRoute();
-    const { artistId } = route.params;
+    const {artistId} = route.params;
 
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [artistName, setArtistName] = useState("");
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -38,9 +39,45 @@ const ArtistEvents = ({navigation}) => {
             }
         }
         fetchEvents();
-    }, [])
+    }, [artistId])
 
-    const handleLike = async () => {
+    useEffect(() => {
+        const fetchUser = async () => {
+            const foundUser = await AsyncStorage.getItem("user");
+            if (foundUser) {
+                const parsedUser = JSON.parse(foundUser);
+                setUser(parsedUser);
+            } else {
+                setUser(null);
+            }
+        }
+        fetchUser();
+    }, [artistId])
+
+    const handleLike = async (eventId) => {
+        if (!user) {
+            Alert.alert("Error", "You must be logged in to like an event");
+            return;
+        }
+
+        try {
+            let response;
+            if (user.likedEvents && user.likedEvents.includes(eventId)) {
+                response = await DatabaseModule.unlikeEvent(user.id, eventId);
+            } else {
+                response = await DatabaseModule.likeEvent(user.id, eventId);
+            }
+
+            if (!response) {
+                throw new Error("An error occurred while liking the event");
+            }
+
+            const updatedUser = JSON.parse(response);
+            await AsyncStorage.setItem("user", JSON.stringify(updatedUser));
+            setUser(updatedUser);
+        } catch (error) {
+            Alert.alert("Error", error.message);
+        }
     }
 
     if (loading) {
@@ -51,26 +88,32 @@ const ArtistEvents = ({navigation}) => {
         )
     }
 
+    const renderItem = ({item}) => (
+        <View style={styles.eventContainer}>
+            <View key={item.id} style={styles.eventDetails}>
+                <Image source={{uri: item.imageUrl}} style={styles.eventImage}/>
+                <Text style={styles.eventTitle}>{item.name}</Text>
+                <Text style={styles.eventText}>Date: {item.date}</Text>
+                <Text style={styles.eventText}>Venue: {item.venueName}</Text>
+                <Text style={styles.eventText}>Address: {item.venueAddress}</Text>
+                <Text style={styles.eventText}>Price Range: {item.priceRange}</Text>
+                {user && user.likedEvents && user.likedEvents.includes(item.id) ?
+                    <Button title={"Unlike"} onPress={() => handleLike(item.id)} style={styles.eventButtonUnlike}/>
+                    : <Button title={"Like"} onPress={() => handleLike(item.id)} style={styles.eventButton}/>
+                }
+            </View>
+        </View>
+    );
     return (
         <View style={styles.container}>
             <Text style={styles.title}>
                 Events for {artistName}
             </Text>
-            {loading ? <Text>Loading...</Text> : (
-                <View style={styles.eventContainer}>
-                    {events.map(event => (
-                        <View key={event.id} style={styles.eventDetails}>
-                            <Image source={{uri: event.imageUrl}} style={styles.eventImage}/>
-                            <Text style={styles.eventText}>{event.name}</Text>
-                            <Text style={styles.eventText}>Date: {event.date}</Text>
-                            <Text style={styles.eventText}>Venue: {event.venueName}</Text>
-                            <Text style={styles.eventText}>Address: {event.venueAddress}</Text>
-                            <Text style={styles.eventText}>Price Range: {event.priceRange}</Text>
-                            <Button title={"I'm Interested!"} onPress={handleLike} style={styles.eventButton}/>
-                        </View>
-                    ))}
-                </View>
-            )}
+            <FlatList
+                data={events}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+            />
         </View>
     )
 }
@@ -94,7 +137,7 @@ const styles = StyleSheet.create({
         borderColor: '#ddd',
         borderWidth: 1,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.1,
         shadowRadius: 5,
         elevation: 3,
@@ -104,6 +147,11 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 30,
         marginRight: 10,
+    },
+    eventTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
     },
     eventText: {
         fontSize: 16,
@@ -122,6 +170,13 @@ const styles = StyleSheet.create({
     eventButtonText: {
         color: '#fff',
         fontWeight: 'bold',
+    },
+    eventButtonUnlike: {
+        backgroundColor: '#dc3545',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+        marginTop: 10,
     },
 });
 
