@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Alert, Button, FlatList, Image, NativeModules, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Alert, Button, FlatList, Image, NativeModules, StyleSheet, Text, TextInput, View, ActivityIndicator} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const {DatabaseModule} = NativeModules;
@@ -7,6 +7,7 @@ const EventSearch = ({navigation}) => {
     const [eventName, setEventName] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -19,6 +20,7 @@ const EventSearch = ({navigation}) => {
 
     const handleSearch = async () => {
         try {
+            setLoading(true);
             const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events.json?apikey=${process.env.API_KEY}&keyword=${eventName}&locale=*`);
             if (!response.ok) {
                 throw new Error("An error occurred while searching for events");
@@ -40,6 +42,7 @@ const EventSearch = ({navigation}) => {
                 venueAddress: event._embedded.venues[0].address.line1 + ", " + event._embedded.venues[0].city.name + ", " + event._embedded.venues[0].state.name + ", " + event._embedded.venues[0].country.name + ", " + event._embedded.venues[0].postalCode,
                 priceRange: event.priceRanges ? `\$${event.priceRanges[0].min} - \$${event.priceRanges[0].max}` : "Not Provided"
             })));
+            setLoading(false);
         } catch (e) {
             Alert.alert("Error", e.message);
         }
@@ -96,7 +99,13 @@ const EventSearch = ({navigation}) => {
                 />
             </View>
 
-            <FlatList data={searchResults} renderItem={({item}) => (
+            {loading ? <ActivityIndicator size="large" color="#007BFF"/>
+            :
+            <FlatList
+                      initialNumToRender={10}
+                      fadingEdgeLength={40}
+                      data={searchResults}
+                      renderItem={({item}) => (
                 <View style={styles.eventContainer} testID={"listItem"}>
                     <Image source={{uri: item.imageUrl}} style={styles.eventImage}/>
                     <Text style={styles.eventTitle}>{item.name}</Text>
@@ -115,6 +124,7 @@ const EventSearch = ({navigation}) => {
                     )}
                 </View>
             )}/>
+            }
         </View>
     )
 }
