@@ -1,20 +1,47 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import React, {useState, useEffect} from "react";
+import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LandingPage = ({navigation}) => {
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const user = await AsyncStorage.getItem("user");
+            setUser(JSON.parse(user));
+        }
+        fetchUser();
+    }, []);
+
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.form}>
+        <View style={styles.container}>
+            <Text style={styles.title}>
+                LiveBeat
+            </Text>
 
-                <Text style={styles.title}>
-                    LiveBeat
-                </Text>
+            <Text style={styles.text}>
+                Your app for discovering live music events!
+            </Text>
 
-                <Text style={styles.text}>
-                    Your app for discovering live music events!
-                </Text>
-
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Login")}>
+                {user ? (
+                    <View style={styles.loggedInButtonContainer}>
+                        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Artist Search")}>
+                    <Text style={styles.buttonText}>Artist Search</Text>
+                </TouchableOpacity>
+                       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Event Search")}>
+                    <Text style={styles.buttonText}>Event Search</Text>
+                </TouchableOpacity>
+                        <Button
+                            title="Logout"
+                            onPress={async () => {
+                                await AsyncStorage.removeItem("user");
+                                setUser(null);
+                            }}
+                        />
+                    </View>
+                ) :
+                <View style={styles.loggedOutButtonContainer}>
+                   <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Login")}>
                     <Text style={styles.buttonText}>Login</Text>
                 </TouchableOpacity>
 
@@ -22,25 +49,28 @@ const LandingPage = ({navigation}) => {
                     <Text style={styles.buttonText}>Signup</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Artist Search")}>
-                    <Text style={styles.buttonText}>Artist Search</Text>
-                </TouchableOpacity>
-            </View>
-        </SafeAreaView>
-    );
+                
+                </View>
+            }
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    form: {
-        width: '80%',
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
+        padding: 20,
+        backgroundColor: '#f5f5f5',
     },
-    button: {
+    loggedInButtonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginTop: 2,
+    },
+  button: {
         backgroundColor: '#3346ff',
         padding: 10,
         marginBottom: 20,
@@ -53,11 +83,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        textAlign: 'center',
+    loggedOutButtonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '60%',
+        marginTop: 2,
     },
     text: {
         fontSize: 16,
@@ -67,8 +97,13 @@ const styles = StyleSheet.create({
         color: 'black',
         textAlign: 'center',
         marginBottom: 30,
-      },
-      
-  });
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: '600',
+        color: '#333',
+        marginBottom: 20,
+    },
+});
 
 export default LandingPage;
