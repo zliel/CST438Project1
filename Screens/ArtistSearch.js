@@ -1,13 +1,16 @@
-import React, { useState } from "react";
-import { Alert, FlatList, Image, StyleSheet, Text, TextInput, View, TouchableOpacity, ImageBackground } from 'react-native';
+import React, {useState} from "react";
+import {ActivityIndicator, Alert, Button, FlatList, Image, StyleSheet, Text, TextInput, View, TouchableOpacity, ImageBackground } from 'react-native';
 
 const ArtistSearch = ({ navigation }) => {
     const [attractionName, setAttractionName] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useState([])
+    const [loading, setLoading] = useState(false);
 
     const handleSearch = async () => {
         try {
-            const API_KEY = process.env.API_KEY;
+            // Use our API key to search for artists from the ticketmaster API
+            const API_KEY = process.env.API_KEY
+            setLoading(true);
             const response = await fetch(`https://app.ticketmaster.com/discovery/v2/attractions.json?apikey=${API_KEY}&keyword=${attractionName}&typeId=KZAyXgnZfZ7v7nI&locale=*`);
             if (!response.ok) {
                 throw new Error("An error occurred while searching for artists");
@@ -24,9 +27,9 @@ const ArtistSearch = ({ navigation }) => {
                     name: attraction.name,
                     id: attraction.id,
                     url: attraction.url,
-                    image_url: attraction.images[0]?.url || '' 
-                }
-            )));
+                    image_url: attraction.images[0].url
+                })));
+            setLoading(false);
         } catch (e) {
             Alert.alert("Error", e.message);
         }
@@ -53,22 +56,27 @@ const ArtistSearch = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
 
-                <FlatList 
-                    data={searchResults} 
-                    renderItem={({ item }) => (
+            {loading ?
+                <ActivityIndicator size="large" color="#007BFF"/>
+                :
+                <FlatList
+                    initialNumToRender={10}
+                    fadingEdgeLength={40}
+                    data={searchResults}
+                    renderItem={({item}) => (
                         <View style={styles.listItem} testID={"listItem"}>
-                            <Image source={{ uri: item.image_url }} style={styles.listItemImage} />
+                            <Image source={{uri: item.image_url}} style={styles.listItemImage}/>
                             <Text style={styles.listItemText}>{item.name}</Text>
-                            <TouchableOpacity style={styles.listItemButton} onPress={() => navigation.navigate("ArtistEvents", { artistId: item.id })}>
-                                <Text style={styles.listItemButtonText}>See Events</Text>
-                            </TouchableOpacity>
+                            <Button style={styles.listItemButton}
+                                    title={"See Events"}
+                                    onPress={() => navigation.navigate("ArtistEvents", {artistId: item.id})}/>
                         </View>
-                    )}
-                />
-            </View>
-        </ImageBackground>
-    );
-};
+                )}/>
+            }
+        </View>
+    </ImageBackground>
+    )
+}
 
 const styles = StyleSheet.create({
     backgroundImage: {

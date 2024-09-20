@@ -35,13 +35,5 @@ describe ('LandingPage', () => {
         const { getByText } = render(<LandingPage navigation={{ navigate }} />);
         fireEvent.press(screen.getByText('Signup'));
         expect(screen.getByText('Signup')).toBeTruthy();
-
-
     });
-
-
-
-
-
-
 });

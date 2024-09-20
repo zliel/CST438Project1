@@ -9,7 +9,8 @@ const Profile = ({navigation}) => {
     //retriving 
     const getUsername = async () => {
         try {
-          const value = await AsyncStorage.getItem('username');
+          const user = await AsyncStorage.getItem('user');
+          value = JSON.parse(user).username
           if (value !== null) {
             setUsername(value);
           }
@@ -18,8 +19,7 @@ const Profile = ({navigation}) => {
             console.error('Error reading username', e);
         }
       };
-
-    useEffect(() => {
+      useEffect(() => {
       getUsername();
     }, []);
     
