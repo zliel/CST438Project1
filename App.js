@@ -7,7 +7,6 @@ import LandingPage from './Screens/LandingPage';
 import Login from './Screens/Login';
 import Signup from './Screens/Signup';
 import ArtistSearch from './Screens/ArtistSearch';
-import { ThemeProvider } from './Screens/ThemeContext'; 
 
 const Drawer = createDrawerNavigator();
 
@@ -19,8 +18,6 @@ const App = () => {
   };
 
   return (
-    <ThemeProvider>
-      {/* Wrap only the NavigationContainer, not Drawer.Navigator */}
       <NavigationContainer>
         <Drawer.Navigator screenOptions={{unmountOnBlur: true}}>
           <Drawer.Screen name="Landing Page" component={LandingPage} />
@@ -29,7 +26,6 @@ const App = () => {
           <Drawer.Screen name="Artist Search" component={ArtistSearch} />
         </Drawer.Navigator>
       </NavigationContainer>
-    </ThemeProvider>
   );
 };
 

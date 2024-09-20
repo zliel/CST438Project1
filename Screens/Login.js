@@ -2,12 +2,10 @@ import React, { useState, useContext } from 'react';
 import { SafeAreaView, StyleSheet, TextInput, View, Text, TouchableOpacity, Alert, ImageBackground } from 'react-native';
 import { NativeModules } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ThemeContext } from './ThemeContext'; 
 
 const { DatabaseModule } = NativeModules;
 
 const Login = ({ navigation }) => {
-  const { isDarkMode } = useContext(ThemeContext); 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
