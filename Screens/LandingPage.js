@@ -1,7 +1,18 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { View, Text, StyleSheet, Button } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LandingPage = ({navigation}) => {
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const user = await AsyncStorage.getItem("user");
+            setUser(JSON.parse(user));
+        }
+        fetchUser();
+    }, []);
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>
@@ -12,16 +23,36 @@ const LandingPage = ({navigation}) => {
                 Your app for discovering live music events!
             </Text>
 
-            <View style={styles.buttonContainer}>
-                <Button
-                    title="Login"
-                    onPress={() => navigation.navigate("Login")}
-                />
-                <Button
-                    title="Signup"
-                    onPress={() => navigation.navigate("Signup")}
-                />
-            </View>
+                {user ? (
+                    <View style={styles.loggedInButtonContainer}>
+                        <Button
+                            title="Artist Search"
+                            onPress={() => navigation.navigate("Artist Search")}
+                        />
+                        <Button
+                            title="Event Search"
+                            onPress={() => navigation.navigate("Event Search")}
+                        />
+                        <Button
+                            title="Logout"
+                            onPress={async () => {
+                                await AsyncStorage.removeItem("user");
+                                setUser(null);
+                            }}
+                        />
+                    </View>
+                ) :
+                <View style={styles.loggedOutButtonContainer}>
+                    <Button
+                        title="Login"
+                        onPress={() => navigation.navigate("Login")}
+                    />
+                    <Button
+                        title="Signup"
+                        onPress={() => navigation.navigate("Signup")}
+                    />
+                </View>
+            }
         </View>
     )
 }
@@ -34,10 +65,16 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#f5f5f5',
     },
-    buttonContainer: {
+    loggedInButtonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: '50%',
+        width: '100%',
+        marginTop: 2,
+    },
+    loggedOutButtonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '60%',
         marginTop: 2,
     },
     text: {
