@@ -1,8 +1,7 @@
 import React, {useState} from "react";
-import {ActivityIndicator, Alert, Button, FlatList, Image, StyleSheet, Text, TextInput, View} from 'react-native';
+import {ActivityIndicator, Alert, Button, FlatList, Image, StyleSheet, Text, TextInput, View, TouchableOpacity, ImageBackground } from 'react-native';
 
-
-const ArtistSearch = ({navigation}) => {
+const ArtistSearch = ({ navigation }) => {
     const [attractionName, setAttractionName] = useState('');
     const [searchResults, setSearchResults] = useState([])
     const [loading, setLoading] = useState(false);
@@ -22,8 +21,6 @@ const ArtistSearch = ({navigation}) => {
                 throw new Error("No artists found");
             }
 
-
-            // Set the search results to the data we got back
             setSearchResults(data._embedded.attractions.map(attraction => (
                 {
                     key: attraction.id,
@@ -36,28 +33,28 @@ const ArtistSearch = ({navigation}) => {
         } catch (e) {
             Alert.alert("Error", e.message);
         }
-    }
-
+    };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>
-                Search for an Artist
-            </Text>
-            <View style={styles.searchContainer}>
-                <TextInput
-                    style={styles.searchInput}
-                    placeholder="Search for an artist!"
-                    onChangeText={newAttractionName => setAttractionName(newAttractionName)}
-                    defaultValue={attractionName}
-                    testID={"searchBar"}
-                />
-                <Button style={styles.searchButton}
-                        title={"Search"}
-                        onPress={handleSearch}
-                        testID={"searchButton"}
-                />
-            </View>
+        <ImageBackground
+            source={require('../assets/Download.png')} 
+            style={styles.backgroundImage}
+        >
+            <View style={styles.container}>
+                <Text style={styles.title}>Search for an Artist</Text>
+                <View style={styles.searchContainer}>
+                    <TextInput
+                        style={[styles.searchInput, { color: '#fff' }]} 
+                        placeholder="Search for an artist!"
+                        onChangeText={newAttractionName => setAttractionName(newAttractionName)}
+                        defaultValue={attractionName}
+                        placeholderTextColor="#fff" 
+                        testID={"searchBar"}
+                    />
+                    <TouchableOpacity style={styles.searchButton} onPress={handleSearch} testID={"searchButton"}>
+                        <Text style={styles.searchButtonText}>Search</Text>
+                    </TouchableOpacity>
+                </View>
 
             {loading ?
                 <ActivityIndicator size="large" color="#007BFF"/>
@@ -77,14 +74,25 @@ const ArtistSearch = ({navigation}) => {
                 )}/>
             }
         </View>
+    </ImageBackground>
     )
 }
 
 const styles = StyleSheet.create({
+    backgroundImage: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#f5f5f5',
+    },
+    title: {
+        fontSize: 24,
+        color: '#fff',
+        textAlign: 'center',
+        marginBottom: 20,
     },
     searchContainer: {
         flexDirection: 'row',
@@ -93,18 +101,19 @@ const styles = StyleSheet.create({
     searchInput: {
         flex: 1,
         height: 40,
-        borderColor: '#ccc',
+        borderColor: 'transparent',
         borderWidth: 1,
         borderRadius: 5,
         paddingHorizontal: 10,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(255, 255, 255, 0.2)', 
     },
     searchButton: {
         marginLeft: 10,
-        backgroundColor: '#007BFF',
+        backgroundColor: 'red', 
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 5,
+        alignItems: 'center',
     },
     searchButtonText: {
         color: '#fff',
@@ -115,10 +124,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10,
         marginBottom: 10,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(255, 255, 255, 0.2)', 
         borderRadius: 5,
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: 2},
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 5,
         elevation: 2,
@@ -126,7 +135,7 @@ const styles = StyleSheet.create({
     listItemText: {
         flex: 1,
         fontSize: 16,
-        color: '#333',
+        color: '#fff',
     },
     listItemImage: {
         width: 60,
@@ -135,7 +144,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     listItemButton: {
-        backgroundColor: '#28a745',
+        backgroundColor: 'red', 
         paddingVertical: 5,
         paddingHorizontal: 10,
         borderRadius: 5,
