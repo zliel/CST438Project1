@@ -24,6 +24,7 @@ const Login = ({navigation}) => {
 
     if (response !== null) {
         await AsyncStorage.setItem("user", JSON.stringify(response));
+        navigation.navigate('Profile')
     } else {
         console.error("Invalid username or password");
     }
