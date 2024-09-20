@@ -126,6 +126,30 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#f5f5f5',
     },
+    searchContainer: {
+        flexDirection: 'row',
+        marginBottom: 20,
+    },
+    searchInput: {
+        flex: 1,
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        backgroundColor: '#fff',
+    },
+    searchButton: {
+        marginLeft: 10,
+        backgroundColor: '#007BFF',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+    },
+    searchButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
     title: {
         fontSize: 24,
         fontWeight: '600',
