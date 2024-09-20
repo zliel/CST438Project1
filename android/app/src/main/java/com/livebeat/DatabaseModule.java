@@ -6,9 +6,11 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReadableArray;
 import com.livebeat.Models.User;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -43,8 +45,12 @@ public class DatabaseModule extends ReactContextBaseJavaModule {
     public void getUserByUsername(String username, Promise promise) {
         AppDatabase db = DatabaseClient.getInstance(getReactApplicationContext()).getAppDatabase();
         User user = db.userDao().findByUsername(username);
-        user.setPassword(null);
-        promise.resolve(gson.toJson(user));
+        if (user != null) {
+            user.setPassword(null);
+            promise.resolve(gson.toJson(user));
+        } else {
+            promise.resolve(null);
+        }
     }
 
     @ReactMethod
@@ -56,10 +62,14 @@ public class DatabaseModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void insertUser(String username, String password, ArrayList<String> likedEvents, Promise promise) {
+    public void insertUser(String username, String password, ReadableArray likedEvents, Promise promise) {
         AppDatabase db = DatabaseClient.getInstance(getReactApplicationContext()).getAppDatabase();
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        User user = new User(username, hashedPassword, likedEvents);
+        ArrayList<String> likedEventsList = new ArrayList<String>();
+        for (int i = 0; i < likedEvents.size(); i++) {
+            likedEventsList.add(likedEvents.getString(i));
+        }
+        User user = new User(username, hashedPassword, likedEventsList);
         db.userDao().insert(user);
         user.setPassword(null);
         promise.resolve(gson.toJson(user));
@@ -94,5 +104,35 @@ public class DatabaseModule extends ReactContextBaseJavaModule {
         } else {
             promise.reject("Error", "User not found");
         }
+    }
+
+    @ReactMethod
+    public User likeEvent(int id, String eventId, Promise promise) {
+        AppDatabase db = DatabaseClient.getInstance(getReactApplicationContext()).getAppDatabase();
+        User user = db.userDao().findById(id);
+        if (user != null) {
+            user.getLikedEvents().add(eventId);
+            db.userDao().update(user);
+            user.setPassword(null);
+            promise.resolve(gson.toJson(user));
+        } else {
+            promise.reject("Error", "User not found");
+        }
+        return null;
+    }
+
+    @ReactMethod
+    public User unlikeEvent(int id, String eventId, Promise promise) {
+        AppDatabase db = DatabaseClient.getInstance(getReactApplicationContext()).getAppDatabase();
+        User user = db.userDao().findById(id);
+        if (user != null) {
+            user.getLikedEvents().remove(eventId);
+            db.userDao().update(user);
+            user.setPassword(null);
+            promise.resolve(gson.toJson(user));
+        } else {
+            promise.reject("Error", "User not found");
+        }
+        return null;
     }
 }
