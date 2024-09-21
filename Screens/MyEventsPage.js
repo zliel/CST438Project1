@@ -12,7 +12,8 @@ const MyEventsPage = () => {
         try {
             // Get the current user's liked event IDs from AsyncStorage
             const user = await AsyncStorage.getItem('user');
-            const likedEventIds = JSON.parse(user).likedEvents
+            let likedEventIds = JSON.parse(user).likedEvents
+            console.log(likedEventIds)
             if (!likedEventIds) {
                 setLikedEvents([]);
                 setLoading(false);
@@ -31,19 +32,24 @@ const MyEventsPage = () => {
             //         })
             //         .catch((error) => console.error('Error fetching event:', error))
             // );
+            let counter = 0
+            for (const id of likedEventIds) {
+                if (counter % 5 === 0) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+                console.log(id)
+              const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events/${id}?apikey=BqDOwWmKLmND8A5y1E6rjXCJBNrab1Il&locale=*`)
+                const data = await response.json()
+                console.log(data)
+                eventData.push(data)
 
-            for (id in likedEventIds) {
-              const response = await fetch(`https://app.ticketmaster.com/discovery/v2/events?${id}?apikey=${API_KEY}&locale=*`)
-              const data = response.json()
-              console.log(data)
-              eventData.push(data)
 
             }
             setLikedEvents(eventData)
 
             // const eventsData = await Promise.all(eventPromises);
             // const filteredEventsData = eventData.filter(event => event && event.name); // Filter out any undefined or malformed responses
-            setLikedEvents(filteredEventsData);
+            // setLikedEvents(eventData);
         } catch (error) {
             console.error('Error fetching liked events:', error);
         } finally {
@@ -56,7 +62,7 @@ const MyEventsPage = () => {
     const renderEvent = ({ item }) => (
         <View style={styles.eventItem}>
             <Text style={styles.eventName}>{item.name}</Text>
-            {/* <Text style={styles.eventDetails}>{item.dates.start.localDate} at {item.dates.start.localTime}</Text> */}
+             <Text style={styles.eventDetails}>{item.dates.start.localDate} at {item.dates.start.localTime}</Text>
         </View>
     );
     return (

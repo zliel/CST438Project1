@@ -10,7 +10,7 @@ const Profile = ({navigation}) => {
     const getUsername = async () => {
         try {
           const user = await AsyncStorage.getItem('user');
-          value = JSON.parse(user).username
+          let value = JSON.parse(user).username
           if (value !== null) {
             setUsername(value);
           }
@@ -26,10 +26,6 @@ const Profile = ({navigation}) => {
     return (
        <View style={styles.container}>
         <Text style={styles.username}>Hello, {username}!</Text>
-        <Button style={styles.button}
-          title ="Update Profile"
-          onPress={() =>navigation.navigate("Update Profile")}
-        />
         <Button
          title="My Events"
          onPress={() => navigation.navigate("My Events")}

@@ -7,6 +7,10 @@ import LandingPage from './Screens/LandingPage';
 import Login from './Screens/Login';
 import Signup from './Screens/Signup';
 import ArtistSearch from './Screens/ArtistSearch';
+import Profile from "./Screens/ProfilePage";
+import EventSearch from "./Screens/EventSearch";
+import MyEventsPage from "./Screens/MyEventsPage";
+import ArtistEvents from "./Screens/ArtistEvents";
 
 const Drawer = createDrawerNavigator();
 
@@ -24,6 +28,10 @@ const App = () => {
           <Drawer.Screen name="Login" component={Login} />
           <Drawer.Screen name="Signup" component={Signup} />
           <Drawer.Screen name="Artist Search" component={ArtistSearch} />
+          <Drawer.Screen name="ArtistEvents" component={ArtistEvents} options={{drawerItemStyle: {display: 'none'}}}/>
+          <Drawer.Screen name="Event Search" component={EventSearch} />
+          <Drawer.Screen name="Profile" component={Profile} />
+          <Drawer.Screen name="My Events" component={MyEventsPage}/>
         </Drawer.Navigator>
       </NavigationContainer>
   );
