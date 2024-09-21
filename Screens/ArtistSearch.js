@@ -67,9 +67,9 @@ const ArtistSearch = ({ navigation }) => {
                         <View style={styles.listItem} testID={"listItem"}>
                             <Image source={{uri: item.image_url}} style={styles.listItemImage}/>
                             <Text style={styles.listItemText}>{item.name}</Text>
-                            <Button style={styles.listItemButton}
-                                    title={"See Events"}
-                                    onPress={() => navigation.navigate("ArtistEvents", {artistId: item.id})}/>
+                            <TouchableOpacity style={styles.listItemButton} onPress={() => navigation.navigate("ArtistEvents", { artistId: item.id })}>
+                                <Text style={styles.listItemButtonText}>Events</Text>
+                            </TouchableOpacity>
                         </View>
                 )}/>
             }
